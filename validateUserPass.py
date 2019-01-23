@@ -1,10 +1,21 @@
 import outlook
     
-def cleanString ( stringChain ):
+def cleanStringDiferentLineUserPass ( stringChain ):
 	position = stringChain.find(':') + 1
 	stringChain = stringChain[position:]
 	stringChain = stringChain.strip()
-	
+	return stringChain
+
+def cleanStringSameLineUser ( stringChain ):
+	position = stringChain.find(':')
+	stringChain = stringChain[:position]
+	stringChain = stringChain.strip()
+	return stringChain
+
+def cleanStringSameLinePass ( stringChain ):
+	position = stringChain.find(':') + 1
+	stringChain = stringChain[position:]
+	stringChain = stringChain.strip()
 	return stringChain
 
 def validateHotmailEmail ( email ):
@@ -17,22 +28,23 @@ def testConnection ( userName, passw ):
 	try:
 		return mail.loginMine(userName, passw)
 	except:
-		print("An exception occurred")
 		return False
 	
-fileToRead = open('lista_comprobar.txt', 'r')
-fileToWrite = open('lista_validados.txt', 'w')
+
+fileToRead = open('emails_to_check.txt', 'r')
+fileToWrite = open('active_emails.txt', 'w')
 
 userName = ''
 passw = ''
-print ('Loading...')
 
 for line in fileToRead:
-	if 'user' in line.lower():
-		userName = cleanString(line)
-		passw = ''
-	if 'pass' in line.lower():
-		passw = cleanString(line)
+	# if 'user' in line.lower():
+	# 	userName = cleanStringDiferentLineUserPass(line)
+	# 	passw = ''
+	# if 'pass' in line.lower():
+	# 	passw = cleanStringDiferentLineUserPass(line)
+	userName = cleanStringSameLineUser(line)
+	passw = cleanStringSameLinePass(line)
 
 	if validateHotmailEmail ( userName ) == False:
 		userName = ''
