@@ -24,10 +24,25 @@ class Outlook():
                 assert r == 'OK', 'login failed'
                 print(" > Sign as ", d)
             except:
-                print(" > Sign In ...")
-                continue
+                print("Error")
+                break
             # self.imap.logout()
             break
+	
+    def loginMine(self, username, password):
+        self.username = username
+        self.password = password
+        while True:
+            try:
+                self.imap = imaplib.IMAP4_SSL(config.imap_server,config.imap_port)
+                r, d = self.imap.login(username, password)
+                assert r == 'OK', 'login failed'
+                return True
+            except:
+                return False
+            break
+
+
 
     def sendEmailMIME(self, recipient, subject, message):
         msg = email.mime.multipart.MIMEMultipart()
