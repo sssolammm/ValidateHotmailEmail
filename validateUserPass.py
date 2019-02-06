@@ -29,24 +29,29 @@ def testConnection ( userName, passw ):
 		return mail.loginMine(userName, passw)
 	except:
 		return False
+
+FILE_EMAIL_CHECKER = 'emails_to_check.txt'
+FILE_EMAIL_VALIDATED = 'active_emails.txt'
 	
-emailPassLines = input("Email/Password position? 1 or 2 lines: ")
+emailPassLines = int(input("Email/Password position? 1 or 2 lines: "))
 
+totalFileLines = sum(1 for line in open(FILE_EMAIL_CHECKER))
+actualLine = 0
 
-fileToRead = open('emails_to_check.txt', 'r')
-fileToWrite = open('active_emails.txt', 'w')
+fileToRead = open(FILE_EMAIL_CHECKER, 'r')
+fileToWrite = open(FILE_EMAIL_VALIDATED, 'w')
 
 userName = ''
 passw = ''
 
 for line in fileToRead:
-	if emailPassLines == 1:
+	if emailPassLines == 2:
 		if 'user' in line.lower():
 			userName = cleanStringDiferentLineUserPass(line)
 			passw = ''
 		if 'pass' in line.lower():
 			passw = cleanStringDiferentLineUserPass(line)
-	elif emailPassLines == 2:
+	elif emailPassLines == 1:
 		userName = cleanStringSameLineUser(line)
 		passw = cleanStringSameLinePass(line)
 
@@ -54,8 +59,10 @@ for line in fileToRead:
 		userName = ''
 
 	if userName != '' and passw != '':
-		print(userName + ' - ' + passw)
+		actualLine += 1
+		print ("Read lines: " + str(actualLine) + " / " + str(totalFileLines))
 		if testConnection(userName, passw):
+			print(userName + ' - ' + passw)
 			fileToWrite.write(userName + '\n')
 			fileToWrite.write(passw + '\n')
 		userName = ''
